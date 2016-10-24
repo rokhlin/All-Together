@@ -8,17 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.selfapps.rav.alltogether.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link GroupsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link GroupsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class GroupsFragment extends Fragment {
+    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    //0b7BDBFNWvXnt2h380VP8tZPotE2
+    DatabaseReference currentUser = rootRef.child("0b7BDBFNWvXnt2h380VP8tZPotE2");
 
     private OnFragmentInteractionListener mListener;
 
