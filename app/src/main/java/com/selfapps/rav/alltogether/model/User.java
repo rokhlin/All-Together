@@ -7,9 +7,18 @@ public class User {
     String name;
     String id;
     ArrayList<GroupReference> groupCoordinators = new ArrayList<>();
-
+    ArrayList<GroupReference> groupJoined = new ArrayList<>();
     public User() {
 
+    }
+
+
+    public ArrayList<GroupReference> getGroupJoined() {
+        return groupJoined;
+    }
+
+    public void setGroupJoined(ArrayList<GroupReference> groupJoined) {
+        this.groupJoined = groupJoined;
     }
 
     public String getName() {

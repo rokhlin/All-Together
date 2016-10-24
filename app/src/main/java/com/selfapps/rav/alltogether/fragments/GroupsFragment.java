@@ -3,21 +3,37 @@ package com.selfapps.rav.alltogether.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.selfapps.rav.alltogether.R;
+import com.selfapps.rav.alltogether.firebaseDao.FirebaseHelper;
+import com.selfapps.rav.alltogether.firebaseDao.GroupAdapter;
+import com.selfapps.rav.alltogether.firebaseDao.GroupsViewHolder;
+import com.selfapps.rav.alltogether.model.GroupReference;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Random;
 
 public class GroupsFragment extends Fragment {
-    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    //0b7BDBFNWvXnt2h380VP8tZPotE2
-    DatabaseReference currentUser = rootRef.child("0b7BDBFNWvXnt2h380VP8tZPotE2");
-
-    private OnFragmentInteractionListener mListener;
+    DatabaseReference db; //0b7BDBFNWvXnt2h380VP8tZPotE2
+    FirebaseHelper helper;
+    RecyclerView rv;
+    GroupAdapter adapter;
+    FloatingActionButton fab;
+ArrayList<String> sfda;
+    private Context ctx;
 
     public GroupsFragment() {
         // Required empty public constructor
@@ -33,47 +49,64 @@ public class GroupsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ctx =getActivity();
 
+        //SETUP FB
+        db = FirebaseDatabase.getInstance().getReference().child("0b7BDBFNWvXnt2h380VP8tZPotE2");
+        helper = new FirebaseHelper(db);
+
+        //ADAPTER
+        adapter = new GroupAdapter(
+                                GroupReference.class,
+                                R.layout.group_item,
+                                GroupsViewHolder.class,
+                                db.child("groupCoordinators"
+                                ));
+
+        fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fabBaseActivity);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               addNewGroupTest();
+            }
+        });
     }
+
+    private void addNewGroupTest() {
+        //GET DATA
+        Random r = new Random();
+
+        String name="Group_"+ r.nextInt(1000);;
+        //SET DATA
+        GroupReference group = new GroupReference(name);
+
+        //VALIDATE
+        if(name.length()>0 && name != null)
+        {
+            if(helper.addGroupReference(group))
+            {
+                adapter.notifyDataSetChanged();
+            }
+        }else
+        {
+            Toast.makeText(getContext(), "Name Cannot Be Empty", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_groups, container, false);
+
+        //SETUP RV
+        View v = inflater.inflate(R.layout.fragment_groups, container, false);
+        rv = (RecyclerView) v.findViewById(R.id.recyclerGroups);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(ctx));
+        rv.setAdapter(adapter);
+        return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
 
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

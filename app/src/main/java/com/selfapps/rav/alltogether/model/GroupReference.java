@@ -7,6 +7,10 @@ public class GroupReference {
     public GroupReference() {
     }
 
+    public GroupReference(String name) {
+        this.name = name;
+    }
+
     public String getId() {
         return id;
     }
