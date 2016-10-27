@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class GroupsFragment extends Fragment {
+    private static final String TAG ="GroupsFragment" ;
     DatabaseReference db; //0b7BDBFNWvXnt2h380VP8tZPotE2
     FirebaseHelper helper;
     RecyclerView rv;
@@ -54,14 +56,15 @@ ArrayList<String> sfda;
         //SETUP FB
         db = FirebaseDatabase.getInstance().getReference().child("0b7BDBFNWvXnt2h380VP8tZPotE2");
         helper = new FirebaseHelper(db);
+        DatabaseReference coordinatorsRef = db.child("groupCoordinators");
 
         //ADAPTER
         adapter = new GroupAdapter(
                                 GroupReference.class,
                                 R.layout.group_item,
                                 GroupsViewHolder.class,
-                                db.child("groupCoordinators"
-                                ));
+                                coordinatorsRef);
+
 
         fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fabBaseActivity);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +79,7 @@ ArrayList<String> sfda;
         //GET DATA
         Random r = new Random();
 
-        String name="Group_"+ r.nextInt(1000);;
+        String name="Group_"+ r.nextInt(1000);
         //SET DATA
         GroupReference group = new GroupReference(name);
 
