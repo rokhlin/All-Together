@@ -8,73 +8,76 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.selfapps.rav.alltogether.BaseActivity;
+import com.selfapps.rav.alltogether.model.Group;
 import com.selfapps.rav.alltogether.model.GroupReference;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Map;
+
 
 public class FirebaseHelper {
 
     private static final String TAG = "FirebaseHelper";
-    DatabaseReference db;
-
-    ArrayList<GroupReference> coordinatorGroups=new ArrayList<>();
+    private final String userUID;
+    private final DatabaseReference db;
+    private final DatabaseReference userRef;
+    LinkedList<String> groupKeys = new LinkedList<>();
 
     public FirebaseHelper(DatabaseReference db) {
         this.db = db;
+        userUID = BaseActivity.authUser.getUid();
+        userRef = db.child("Users").child(userUID);
     }
 
 
-    public boolean addGroupReference(GroupReference groupReference) {
-        Boolean saved=null;
-        DatabaseReference dbRef = db.child("groupReferenses");
-        if(groupReference==null) {
-            return false;}
-        else {
-            try
-            {
-                dbRef.push().setValue(groupReference);
-                return true;
-            }catch (DatabaseException e)
-            {
-                e.printStackTrace();
-                return false;
-            }
+    public String addGroupReference(GroupReference groupReference) {
+        DatabaseReference dbRef = userRef.child("groupReferenses");
+        return setValue(dbRef,groupReference);
+    }
+
+
+    public String addGroup(Group group){
+        DatabaseReference dbRef = db.child("groups");
+        return setValue(dbRef,group);
+    }
+
+
+
+
+
+    private void fetchGroupData(DataSnapshot dataSnapshot)
+    {
+        //groupKeys.clear();
+        for (DataSnapshot ds : dataSnapshot.getChildren())
+        {
+           //GroupReference coordinateGroup = ds.child("groupReferenses").getValue(GroupReference.class);
+            String key = ds.getKey();
+            if(groupKeys.contains(key))
+                continue;
+            groupKeys.add(key);
+            Log.d(TAG,"groupKeys.getLast() = "+ groupKeys.getLast());
+
         }
     }
 
 
-    public ArrayList<GroupReference> retrieve()
-    {
-        db.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                fetchData(dataSnapshot);
+    private String setValue(DatabaseReference dbRef, Object obj) {
+        if(obj==null) {
+            return null;}
+        else {
+            try
+            {
+                String key = dbRef.push().getKey();
+                dbRef.child(key ).setValue(obj);
+                return key;
+            }catch (DatabaseException e)
+            {
+                e.printStackTrace();
+                return null;
             }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                fetchData(dataSnapshot);
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        return coordinatorGroups;
-    }
-
-    private void fetchData(DataSnapshot dataSnapshot)
-    {
-        coordinatorGroups.clear();
-        for (DataSnapshot ds : dataSnapshot.getChildren())
-        {
-           GroupReference coordinateGroup = ds.child("0b7BDBFNWvXnt2h380VP8tZPotE2").child("groupCoordinators").getValue(GroupReference.class);
-            Log.d(TAG,"coordinatorGroups.size() = "+coordinatorGroups.size());
-            coordinatorGroups.add(coordinateGroup);
         }
     }
 

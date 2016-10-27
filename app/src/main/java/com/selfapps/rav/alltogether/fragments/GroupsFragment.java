@@ -1,30 +1,25 @@
 package com.selfapps.rav.alltogether.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.selfapps.rav.alltogether.BaseActivity;
 import com.selfapps.rav.alltogether.R;
 import com.selfapps.rav.alltogether.firebaseDao.FirebaseHelper;
 import com.selfapps.rav.alltogether.firebaseDao.GroupAdapter;
 import com.selfapps.rav.alltogether.firebaseDao.GroupsViewHolder;
+import com.selfapps.rav.alltogether.model.Group;
 import com.selfapps.rav.alltogether.model.GroupReference;
 
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.Random;
 
 public class GroupsFragment extends Fragment {
@@ -34,8 +29,8 @@ public class GroupsFragment extends Fragment {
     RecyclerView rv;
     GroupAdapter adapter;
     FloatingActionButton fab;
-ArrayList<String> sfda;
     private Context ctx;
+    private String userUID;
 
     public GroupsFragment() {
         // Required empty public constructor
@@ -51,19 +46,20 @@ ArrayList<String> sfda;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ctx =getActivity();
-
+        ctx = getActivity();
+        userUID = BaseActivity.authUser.getUid();
         //SETUP FB
-        db = FirebaseDatabase.getInstance().getReference().child("0b7BDBFNWvXnt2h380VP8tZPotE2");
+        db = FirebaseDatabase.getInstance().getReference();
+
         helper = new FirebaseHelper(db);
-        DatabaseReference coordinatorsRef = db.child("groupReferenses");
+        DatabaseReference groupReferenses = db.child("Users").child(userUID).child("groupReferenses");
 
         //ADAPTER
         adapter = new GroupAdapter(
                                 GroupReference.class,
                                 R.layout.group_item,
                                 GroupsViewHolder.class,
-                                coordinatorsRef);
+                                groupReferenses);
 
 
         fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fabBaseActivity);
@@ -76,26 +72,31 @@ ArrayList<String> sfda;
     }
 
     private void addNewGroupTest() {
+
+        Group group = addNewGroup();
+        String groupKey = helper.addGroup(group);
+
+        GroupReference groupRef = addGroupReference(groupKey);
+
+        if(helper.addGroupReference(groupRef) != null)
+            adapter.notifyDataSetChanged();
+
+
+    }
+
+    private Group addNewGroup() {
+        Random r = new Random();
+        String name = "Group_"+ r.nextInt(1000);
+
+        return new Group(name);
+    }
+
+    private GroupReference addGroupReference(String id) {
         //GET DATA
         Random r = new Random();
-
         String name = "Group_"+ r.nextInt(1000);
-        String id = r.nextInt(1000)+"";
         String role = "coordinator";
-        //SET DATA
-        GroupReference group = new GroupReference(id,name,role);
-
-        //VALIDATE
-        if(name.length()>0 && name != null)
-        {
-            if(helper.addGroupReference(group))
-            {
-                adapter.notifyDataSetChanged();
-            }
-        }else
-        {
-            Toast.makeText(getContext(), "Name Cannot Be Empty", Toast.LENGTH_SHORT).show();
-        }
+        return  new GroupReference(id,name,role);
     }
 
 
