@@ -26,7 +26,7 @@ public class FirebaseHelper {
 
     public boolean addGroupReference(GroupReference groupReference) {
         Boolean saved=null;
-        DatabaseReference dbRef = db.child("groupCoordinators");
+        DatabaseReference dbRef = db.child("groupReferenses");
         if(groupReference==null) {
             return false;}
         else {

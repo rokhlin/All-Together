@@ -56,7 +56,7 @@ ArrayList<String> sfda;
         //SETUP FB
         db = FirebaseDatabase.getInstance().getReference().child("0b7BDBFNWvXnt2h380VP8tZPotE2");
         helper = new FirebaseHelper(db);
-        DatabaseReference coordinatorsRef = db.child("groupCoordinators");
+        DatabaseReference coordinatorsRef = db.child("groupReferenses");
 
         //ADAPTER
         adapter = new GroupAdapter(
@@ -79,9 +79,11 @@ ArrayList<String> sfda;
         //GET DATA
         Random r = new Random();
 
-        String name="Group_"+ r.nextInt(1000);
+        String name = "Group_"+ r.nextInt(1000);
+        String id = r.nextInt(1000)+"";
+        String role = "coordinator";
         //SET DATA
-        GroupReference group = new GroupReference(name);
+        GroupReference group = new GroupReference(id,name,role);
 
         //VALIDATE
         if(name.length()>0 && name != null)
