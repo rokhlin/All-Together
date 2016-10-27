@@ -19,6 +19,7 @@ import com.selfapps.rav.alltogether.firebaseDao.GroupAdapter;
 import com.selfapps.rav.alltogether.firebaseDao.GroupsViewHolder;
 import com.selfapps.rav.alltogether.model.Group;
 import com.selfapps.rav.alltogether.model.GroupReference;
+import com.selfapps.rav.alltogether.model.Member;
 
 import java.util.Random;
 
@@ -31,7 +32,7 @@ public class GroupsFragment extends Fragment {
     FloatingActionButton fab;
     private Context ctx;
     private String userUID;
-
+    private String userName;
     public GroupsFragment() {
         // Required empty public constructor
     }
@@ -48,6 +49,7 @@ public class GroupsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ctx = getActivity();
         userUID = BaseActivity.authUser.getUid();
+        userName = BaseActivity.authUser.getDisplayName();
         //SETUP FB
         db = FirebaseDatabase.getInstance().getReference();
 
@@ -87,8 +89,14 @@ public class GroupsFragment extends Fragment {
     private Group addNewGroup() {
         Random r = new Random();
         String name = "Group_"+ r.nextInt(1000);
+        Group group = new Group(name);
+        group.addMember(addNewMember());
+        return group;
+    }
 
-        return new Group(name);
+    private Member addNewMember() {
+        String role = "coordinator";
+        return new Member(userUID,userName,role);
     }
 
     private GroupReference addGroupReference(String id) {

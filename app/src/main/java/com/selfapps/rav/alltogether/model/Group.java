@@ -85,7 +85,9 @@ public class Group {
     public void setMembers(ArrayList<Member> members) {
         this.members = members;
     }
-
+    public void addMember(Member member) {
+        this.members.add(member);
+    }
     public ArrayList<Event> getEvents() {
         return events;
     }

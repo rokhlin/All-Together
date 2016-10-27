@@ -9,7 +9,7 @@ package com.selfapps.rav.alltogether.model;
  ...
  */
 public class Member {
-    String id; //Real User id
+    String userId; //Real User id
     String name;//Real User name
     String role;
 
@@ -17,12 +17,18 @@ public class Member {
 
     }
 
-    public String getId() {
-        return id;
+    public Member(String userId, String name, String role) {
+        this.userId = userId;
+        this.name = name;
+        this.role = role;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String id) {
+        this.userId = id;
     }
 
     public String getName() {

@@ -13,7 +13,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.selfapps.rav.alltogether.BaseActivity;
 import com.selfapps.rav.alltogether.model.Group;
 import com.selfapps.rav.alltogether.model.GroupReference;
+import com.selfapps.rav.alltogether.model.Member;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -41,11 +43,21 @@ public class FirebaseHelper {
 
     public String addGroup(Group group){
         DatabaseReference dbRef = db.child("groups");
-        return setValue(dbRef,group);
+        String key = setValue(dbRef,group);
+        //addMembers(group.getMembers(),dbRef.child(key));
+        return key;
     }
 
+    private void addMembers(ArrayList<Member> members, DatabaseReference dbRef) {
+        for (Member m : members ) {
+            addMember(m,dbRef);
+        }
+    }
 
-
+    private String addMember(Member m, DatabaseReference db) {
+        DatabaseReference dbRef = db.child("members");
+        return setValue(dbRef,m);
+    }
 
 
     private void fetchGroupData(DataSnapshot dataSnapshot)
