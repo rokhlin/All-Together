@@ -56,7 +56,7 @@ public class GroupsFragment extends Fragment {
         helper = new FirebaseHelper(db);
         DatabaseReference groupReferenses = db.child("Users").child(userUID).child("groupReferenses");
 
-        adapter = new GroupAdapter(ctx,helper.retreive());
+        adapter = new GroupAdapter(ctx);
 //        //ADAPTER
 //        adapter = new GroupAdapter(
 //                                GroupReference.class,
