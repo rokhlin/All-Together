@@ -8,6 +8,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.selfapps.rav.alltogether.BaseActivity;
@@ -16,8 +17,12 @@ import com.selfapps.rav.alltogether.model.GroupReference;
 import com.selfapps.rav.alltogether.model.Member;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 
 public class FirebaseHelper {
@@ -26,12 +31,14 @@ public class FirebaseHelper {
     private final String userUID;
     private final DatabaseReference db;
     private final DatabaseReference userRef;
-    LinkedList<String> groupKeys = new LinkedList<>();
+    ArrayList<GroupReference> groupReferences = new ArrayList<>();
+    LinkedHashMap<String,Integer> groupReferencesLinks = new LinkedHashMap<>();
 
     public FirebaseHelper(DatabaseReference db) {
         this.db = db;
         userUID = BaseActivity.authUser.getUid();
         userRef = db.child("Users").child(userUID);
+
     }
 
 
@@ -60,20 +67,62 @@ public class FirebaseHelper {
     }
 
 
-    private void fetchGroupData(DataSnapshot dataSnapshot)
-    {
-        //groupKeys.clear();
-        for (DataSnapshot ds : dataSnapshot.getChildren())
-        {
-           //GroupReference coordinateGroup = ds.child("groupReferenses").getValue(GroupReference.class);
-            String key = ds.getKey();
-            if(groupKeys.contains(key))
-                continue;
-            groupKeys.add(key);
-            Log.d(TAG,"groupKeys.getLast() = "+ groupKeys.getLast());
+    private void fetchGroupReferences (DataSnapshot dataSnapshot) {
 
-        }
+        GroupReference groupReference = dataSnapshot.getValue(GroupReference.class);
+        Log.d(TAG,"groupReference = "+groupReference.toString());
+        groupReferences.add(groupReference);
+        groupReferencesLinks.put(dataSnapshot.getKey(),groupReferences.size()-1);
     }
+
+    private void updateGroupReferences(DataSnapshot dataSnapshot, String s) {
+        GroupReference groupReference = dataSnapshot.getValue(GroupReference.class);
+        int index = groupReferencesLinks.get(s);
+
+        if(index==0)
+            fetchGroupReferences(dataSnapshot);
+        else
+            groupReferences.set(index,groupReference);
+    }
+
+    public ArrayList<GroupReference> retreive(){
+
+        userRef.child("groupReferenses").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG,"dataSnapshot.toString() = "+dataSnapshot.toString() +" __s="+s);
+                if(!groupReferencesLinks.containsKey(s))
+                    fetchGroupReferences(dataSnapshot);
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                if(!groupReferencesLinks.containsKey(s))
+                    fetchGroupReferences(dataSnapshot);
+                else
+                    updateGroupReferences(dataSnapshot,s);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        return groupReferences;
+    }
+
+
 
 
     private String setValue(DatabaseReference dbRef, Object obj) {
@@ -92,5 +141,42 @@ public class FirebaseHelper {
             }
         }
     }
+
+    private String setGroupValue(DatabaseReference dbRef, Group group) {
+        if(group==null) {
+            return null;}
+        else {
+            try
+            {
+                final String key = dbRef.push().getKey();
+                dbRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Group updGroup = dataSnapshot.getValue(Group.class);
+                        for (Member m: updGroup.getMembers()) {
+                            if(m.equals(new Member(key))){
+                                DatabaseReference dref = FirebaseDatabase.getInstance().getReference().child(userUID).child("groupReferenses");
+                                String refKey = dref.push().getKey();
+                                dref.child(refKey).setValue(new GroupReference(key,updGroup.getName(),m.getRole()));
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                dbRef.child(key).setValue(group);
+                return key;
+            }catch (DatabaseException e)
+            {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
 
 }

@@ -8,8 +8,8 @@ import android.widget.TextView;
 import com.selfapps.rav.alltogether.R;
 
 public class GroupsViewHolder extends RecyclerView.ViewHolder  {
-    TextView name;
-    TextView id;
+    public TextView name;
+    public TextView id;
 
     public GroupsViewHolder(View itemView) {
         super(itemView);

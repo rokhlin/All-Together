@@ -23,6 +23,10 @@ public class Member {
         this.role = role;
     }
 
+    public Member(String userId) {
+        this.userId = userId;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -45,5 +49,21 @@ public class Member {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Member member = (Member) o;
+
+        return userId.equals(member.userId);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return userId.hashCode();
     }
 }

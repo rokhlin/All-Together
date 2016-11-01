@@ -33,6 +33,7 @@ public class GroupsFragment extends Fragment {
     private Context ctx;
     private String userUID;
     private String userName;
+
     public GroupsFragment() {
         // Required empty public constructor
     }
@@ -52,16 +53,16 @@ public class GroupsFragment extends Fragment {
         userName = BaseActivity.authUser.getDisplayName();
         //SETUP FB
         db = FirebaseDatabase.getInstance().getReference();
-
         helper = new FirebaseHelper(db);
         DatabaseReference groupReferenses = db.child("Users").child(userUID).child("groupReferenses");
 
-        //ADAPTER
-        adapter = new GroupAdapter(
-                                GroupReference.class,
-                                R.layout.group_item,
-                                GroupsViewHolder.class,
-                                groupReferenses);
+        adapter = new GroupAdapter(ctx,helper.retreive());
+//        //ADAPTER
+//        adapter = new GroupAdapter(
+//                                GroupReference.class,
+//                                R.layout.group_item,
+//                                GroupsViewHolder.class,
+//                                groupReferenses);
 
 
         fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fabBaseActivity);
@@ -73,14 +74,33 @@ public class GroupsFragment extends Fragment {
         });
     }
 
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        //SETUP RV
+        View v = inflater.inflate(R.layout.fragment_groups, container, false);
+        rv = (RecyclerView) v.findViewById(R.id.recyclerGroups);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.setAdapter(adapter);
+        return v;
+    }
+
+
+
+
     private void addNewGroupTest() {
 
         Group group = addNewGroup();
         String groupKey = helper.addGroup(group);
 
-        GroupReference groupRef = addGroupReference(groupKey);
+       // GroupReference groupRef = addGroupReference(groupKey);
 
-        if(helper.addGroupReference(groupRef) != null)
+        //if(helper.addGroupReference(groupRef) != null)
+        if(groupKey != null)
             adapter.notifyDataSetChanged();
 
 
@@ -95,7 +115,7 @@ public class GroupsFragment extends Fragment {
     }
 
     private Member addNewMember() {
-        String role = "coordinator";
+        String role = "coordinator12323";
         return new Member(userUID,userName,role);
     }
 
@@ -106,21 +126,5 @@ public class GroupsFragment extends Fragment {
         String role = "coordinator";
         return  new GroupReference(id,name,role);
     }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        //SETUP RV
-        View v = inflater.inflate(R.layout.fragment_groups, container, false);
-        rv = (RecyclerView) v.findViewById(R.id.recyclerGroups);
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(new LinearLayoutManager(ctx));
-        rv.setAdapter(adapter);
-        return v;
-    }
-
-
 
 }
