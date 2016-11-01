@@ -77,12 +77,12 @@ public class FirebaseHelper {
 
     private void updateGroupReferences(DataSnapshot dataSnapshot, String s) {
         GroupReference groupReference = dataSnapshot.getValue(GroupReference.class);
-        int index = groupReferencesLinks.get(s);
-
-        if(index==0)
-            fetchGroupReferences(dataSnapshot);
-        else
-            groupReferences.set(index,groupReference);
+            if(groupReferencesLinks.containsKey(dataSnapshot.getKey())) {
+                int index = groupReferencesLinks.get(dataSnapshot.getKey());
+                groupReferences.set(index, groupReference);
+            }
+            else
+                fetchGroupReferences(dataSnapshot);
     }
 
     public ArrayList<GroupReference> retreive(){
@@ -91,17 +91,13 @@ public class FirebaseHelper {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.d(TAG,"dataSnapshot.toString() = "+dataSnapshot.toString() +" __s="+s);
-                if(!groupReferencesLinks.containsKey(s))
-                    fetchGroupReferences(dataSnapshot);
+                updateGroupReferences(dataSnapshot,s);
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                if(!groupReferencesLinks.containsKey(s))
-                    fetchGroupReferences(dataSnapshot);
-                else
-                    updateGroupReferences(dataSnapshot,s);
+                updateGroupReferences(dataSnapshot,s);
             }
 
             @Override
