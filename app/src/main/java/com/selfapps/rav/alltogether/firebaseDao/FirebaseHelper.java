@@ -3,8 +3,6 @@ package com.selfapps.rav.alltogether.firebaseDao;
 
 import android.util.Log;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +30,7 @@ public class FirebaseHelper {
     private final DatabaseReference db;
     private final DatabaseReference dbRoot = FirebaseDatabase.getInstance().getReference();
     List<GroupReference> groupReferences = new LinkedList<>();
-    private ObjectMapper mapper;
+
 
     public FirebaseHelper(DatabaseReference db) {
         this.db = db;
