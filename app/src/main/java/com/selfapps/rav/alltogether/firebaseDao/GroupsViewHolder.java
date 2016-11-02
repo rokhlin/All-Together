@@ -2,6 +2,7 @@ package com.selfapps.rav.alltogether.firebaseDao;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.selfapps.rav.alltogether.BaseActivity;
+import com.selfapps.rav.alltogether.GroupActivity;
 import com.selfapps.rav.alltogether.R;
 import com.selfapps.rav.alltogether.fragments.GroupDetailFragment;
 import com.selfapps.rav.alltogether.fragments.GroupsFragment;
@@ -61,9 +63,13 @@ public class GroupsViewHolder extends RecyclerView.ViewHolder  {
 //        Bundle b = new Bundle();
 //        b.putString("groupId",groupId);
 //        fragment.setArguments(b);
-        ListenerGetter.setId(groupId);
-        FragmentTransaction fTrans = ((BaseActivity)context).getSupportFragmentManager().beginTransaction();
-        fTrans.replace(R.id.frameLayoutBaseActivity, fragment);
-        fTrans.commit();
+//        ListenerGetter.setId(groupId);
+//        FragmentTransaction fTrans = ((BaseActivity)context).getSupportFragmentManager().beginTransaction();
+//        fTrans.replace(R.id.frameLayoutBaseActivity, fragment);
+//        fTrans.commit();
+
+        Intent intent = new Intent(((BaseActivity)context), GroupActivity.class);
+        intent.putExtra("groupId", groupId);
+        ((BaseActivity)context).startActivity(intent);
     }
 }
