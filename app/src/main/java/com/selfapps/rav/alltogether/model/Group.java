@@ -57,6 +57,7 @@ public class Group {
         this.name = name;
     }
 
+
     public Group(String name, String id) {
         this.name = name;
         this.id = id;
@@ -102,5 +103,16 @@ public class Group {
 
     public void setGroupMessages(ArrayList<Message> groupMessages) {
         this.groupMessages = groupMessages;
+    }
+
+    @Override
+    public String toString() {
+        return "Group{" +
+                "name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                ", members=" + members +
+                ", events=" + events +
+                ", groupMessages=" + groupMessages +
+                '}';
     }
 }

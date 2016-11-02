@@ -25,6 +25,7 @@ import com.selfapps.rav.alltogether.R;
 import com.selfapps.rav.alltogether.firebaseDao.FirebaseHelper;
 import com.selfapps.rav.alltogether.firebaseDao.GroupAdapter;
 import com.selfapps.rav.alltogether.firebaseDao.GroupsViewHolder;
+import com.selfapps.rav.alltogether.model.Group;
 import com.selfapps.rav.alltogether.model.GroupReference;
 import static com.selfapps.rav.alltogether.utilites.DbPath.*;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class GroupsFragment extends Fragment {
     GroupAdapter adapter;
     FloatingActionButton fab;
     private Context ctx;
+    private Random r;
 
 
     public GroupsFragment() {
@@ -97,17 +99,22 @@ public class GroupsFragment extends Fragment {
 
     private void addNewGroupTest() {
         //GET DATA
-        Random r = new Random();
+        String name = getGroupName();
 
-        String name = "Group_"+ r.nextInt(1000);
-        String id = r.nextInt(1000)+"";
-        String role = "coordinator";
-        //SET DATA
-        GroupReference group = new GroupReference(id,name,role);
 
-        //VALIDATE
-        helper.addGroupReference(group);
+        String id = helper.addGroup(new Group(name));
+//        String role = "coordinator";
+//        //SET DATA
+//        GroupReference groupReference = new GroupReference(id,name,role);
+//
+//        //VALIDATE
+//        helper.addGroupReference(groupReference);
         adapter.notifyDataSetChanged();
+    }
+
+    private String getGroupName() {
+        r = new Random();
+        return "Group_"+ r.nextInt(1000);
     }
 
 

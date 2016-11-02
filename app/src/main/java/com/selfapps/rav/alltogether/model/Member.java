@@ -9,19 +9,21 @@ package com.selfapps.rav.alltogether.model;
  ...
  */
 public class Member {
-    String userId; //Real User id
-    String name;//Real User name
-    String role;
+    private String userId; //Real User id
+    private String name;//Real User name
+    private String role;
 
     public Member() {
 
     }
+
 
     public Member(String userId, String name, String role) {
         this.userId = userId;
         this.name = name;
         this.role = role;
     }
+
 
     public Member(String userId) {
         this.userId = userId;
@@ -49,6 +51,15 @@ public class Member {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "userId='" + userId + '\'' +
+                ", name='" + name + '\'' +
+                ", role='" + role + '\'' +
+                '}';
     }
 
     @Override

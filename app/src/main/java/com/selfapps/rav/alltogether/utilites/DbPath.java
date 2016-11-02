@@ -7,6 +7,8 @@ import com.selfapps.rav.alltogether.BaseActivity;
 public abstract class DbPath {
 
     public static final String _authUserId = BaseActivity.authUser.getUid();
+    public static final String _authUserName = BaseActivity.authUser.getDisplayName();
+    public static final String _authEmail= BaseActivity.authUser.getEmail();
     public static final String _Users = "Users";
     public static final String _Groups = "Groups";
     public static final String _groupReferences = "groupReferences";
