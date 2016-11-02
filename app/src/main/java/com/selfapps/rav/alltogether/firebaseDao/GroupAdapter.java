@@ -7,19 +7,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import static com.selfapps.rav.alltogether.utilites.DbPath.*;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.selfapps.rav.alltogether.R;
+import com.selfapps.rav.alltogether.model.Group;
 import com.selfapps.rav.alltogether.model.GroupReference;
+import com.selfapps.rav.alltogether.utilites.ListenerGetter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupsViewHolder> {
     private static final String TAG = "GroupAdapter";
-    Context c;
-    List<GroupReference> coordinatorGroups;
+    private ListenerGetter getter = new ListenerGetter();
+    private Context c;
+    private final DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+    private List<GroupReference> coordinatorGroups;
     DatabaseReference ref;//Users/0b7BDBFNWvXnt2h380VP8tZPotE2
 //    public GroupAdapter(Class<GroupReference> modelClass, int modelLayout, Class<GroupsViewHolder> viewHolderClass, DatabaseReference ref) {
 //        super(modelClass, modelLayout, viewHolderClass, ref);
@@ -37,6 +45,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupsViewHolder> {
     @Override
     public GroupsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(c).inflate(R.layout.group_item,parent,false);
+
         return new GroupsViewHolder(v);
     }
 

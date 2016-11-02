@@ -11,11 +11,13 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.selfapps.rav.alltogether.fragments.GroupDetailFragment;
 import com.selfapps.rav.alltogether.fragments.GroupsFragment;
 
 
 public class BaseActivity extends AppCompatActivity {
-
+    public Fragment groupDetailFragment;
+    public Fragment groupsFrag;
 
     public static FirebaseUser authUser;
     @Override
@@ -25,7 +27,8 @@ public class BaseActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         authUser = FirebaseAuth.getInstance().getCurrentUser();
-        Fragment groupsFrag = new GroupsFragment();
+        groupsFrag = new GroupsFragment();
+        groupDetailFragment = new GroupDetailFragment();
         FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
         fTrans.add(R.id.frameLayoutBaseActivity, groupsFrag);
         fTrans.commit();
