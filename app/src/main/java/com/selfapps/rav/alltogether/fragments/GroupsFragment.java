@@ -1,26 +1,34 @@
 package com.selfapps.rav.alltogether.fragments;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.selfapps.rav.alltogether.BaseActivity;
 import com.selfapps.rav.alltogether.R;
 import com.selfapps.rav.alltogether.firebaseDao.FirebaseHelper;
 import com.selfapps.rav.alltogether.firebaseDao.GroupAdapter;
 import com.selfapps.rav.alltogether.firebaseDao.GroupsViewHolder;
-import com.selfapps.rav.alltogether.model.Group;
 import com.selfapps.rav.alltogether.model.GroupReference;
-import com.selfapps.rav.alltogether.model.Member;
-
+import static com.selfapps.rav.alltogether.utilites.DbPath.*;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 public class GroupsFragment extends Fragment {
@@ -31,8 +39,7 @@ public class GroupsFragment extends Fragment {
     GroupAdapter adapter;
     FloatingActionButton fab;
     private Context ctx;
-    private String userUID;
-    private String userName;
+
 
     public GroupsFragment() {
         // Required empty public constructor
@@ -48,21 +55,35 @@ public class GroupsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ctx = getActivity();
-        userUID = BaseActivity.authUser.getUid();
-        userName = BaseActivity.authUser.getDisplayName();
-        //SETUP FB
-        db = FirebaseDatabase.getInstance().getReference();
-        helper = new FirebaseHelper(db);
-        DatabaseReference groupReferenses = db.child("Users").child(userUID).child("groupReferenses");
+        ctx =getActivity();
 
-        adapter = new GroupAdapter(ctx);
-//        //ADAPTER
+        //SETUP FB
+
+        db = FirebaseDatabase.getInstance().getReference().child(_Users).child(_authUserId);
+        helper = new FirebaseHelper(db);
+
+        adapter = new GroupAdapter(ctx,helper.retreive());
+
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+//        //FIREBASE-ADAPTER
 //        adapter = new GroupAdapter(
 //                                GroupReference.class,
 //                                R.layout.group_item,
 //                                GroupsViewHolder.class,
-//                                groupReferenses);
+//                                db.child(_groupReferences));
 
 
         fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fabBaseActivity);
@@ -74,6 +95,20 @@ public class GroupsFragment extends Fragment {
         });
     }
 
+    private void addNewGroupTest() {
+        //GET DATA
+        Random r = new Random();
+
+        String name = "Group_"+ r.nextInt(1000);
+        String id = r.nextInt(1000)+"";
+        String role = "coordinator";
+        //SET DATA
+        GroupReference group = new GroupReference(id,name,role);
+
+        //VALIDATE
+        helper.addGroupReference(group);
+        adapter.notifyDataSetChanged();
+    }
 
 
     @Override
@@ -84,47 +119,11 @@ public class GroupsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_groups, container, false);
         rv = (RecyclerView) v.findViewById(R.id.recyclerGroups);
         rv.setHasFixedSize(true);
-        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.setLayoutManager(new LinearLayoutManager(ctx));
         rv.setAdapter(adapter);
         return v;
     }
 
 
-
-
-    private void addNewGroupTest() {
-
-        Group group = addNewGroup();
-        String groupKey = helper.addGroup(group);
-
-       // GroupReference groupRef = addGroupReference(groupKey);
-
-        //if(helper.addGroupReference(groupRef) != null)
-        if(groupKey != null)
-            adapter.notifyDataSetChanged();
-
-
-    }
-
-    private Group addNewGroup() {
-        Random r = new Random();
-        String name = "Group_"+ r.nextInt(1000);
-        Group group = new Group(name);
-        group.addMember(addNewMember());
-        return group;
-    }
-
-    private Member addNewMember() {
-        String role = "coordinator12323";
-        return new Member(userUID,userName,role);
-    }
-
-    private GroupReference addGroupReference(String id) {
-        //GET DATA
-        Random r = new Random();
-        String name = "Group_"+ r.nextInt(1000);
-        String role = "coordinator";
-        return  new GroupReference(id,name,role);
-    }
 
 }
