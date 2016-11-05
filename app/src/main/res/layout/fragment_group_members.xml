@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/layout_members"
-        android:visibility="gone">
+        >
 
         <TextView
             android:text="Members"
@@ -46,24 +46,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/rv_group_members" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_events">
-
-        <TextView
-            android:text="Events"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tw_events" />
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/rv_events" />
     </LinearLayout>
 
 </LinearLayout>

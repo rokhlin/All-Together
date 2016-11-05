@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.selfapps.rav.alltogether.R;
 import com.selfapps.rav.alltogether.utilites.ListenerGetter;
@@ -33,6 +34,8 @@ public class GroupDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_group_detail, container, false);
+        TextView tv_coordinator =(TextView) v.findViewById(R.id.tw_coordinator);
+        TextView tv_groupName =(TextView) v.findViewById(R.id.tw_group_name);
 //        String gropId = savedInstanceState.get("groupId").toString();
         Log.d(TAG,"gropId = "+ ListenerGetter.getId());
         return v;
