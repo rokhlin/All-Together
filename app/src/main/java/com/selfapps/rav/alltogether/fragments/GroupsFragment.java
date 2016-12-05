@@ -10,29 +10,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.selfapps.rav.alltogether.BaseActivity;
+import com.google.firebase.database.ValueEventListener;
 import com.selfapps.rav.alltogether.R;
-import com.selfapps.rav.alltogether.firebaseDao.FirebaseHelper;
-import com.selfapps.rav.alltogether.firebaseDao.GroupAdapter;
-import com.selfapps.rav.alltogether.firebaseDao.GroupsViewHolder;
+import com.selfapps.rav.alltogether.firebaseDao.GroupsFirebaseHelper;
+import com.selfapps.rav.alltogether.Adapters.GroupAdapter;
 import com.selfapps.rav.alltogether.model.Group;
-import com.selfapps.rav.alltogether.model.GroupReference;
-import com.selfapps.rav.alltogether.model.Member;
+
+import static com.selfapps.rav.alltogether.utilites.DbPath.*;
 
 import java.util.Random;
 
 public class GroupsFragment extends Fragment {
     private static final String TAG ="GroupsFragment" ;
     DatabaseReference db; //0b7BDBFNWvXnt2h380VP8tZPotE2
-    FirebaseHelper helper;
+    GroupsFirebaseHelper helper;
     RecyclerView rv;
     GroupAdapter adapter;
     FloatingActionButton fab;
     private Context ctx;
-    private String userUID;
-    private String userName;
+    private Random r;
+
+
     public GroupsFragment() {
         // Required empty public constructor
     }
@@ -48,63 +50,63 @@ public class GroupsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ctx = getActivity();
-        userUID = BaseActivity.authUser.getUid();
-        userName = BaseActivity.authUser.getDisplayName();
+
         //SETUP FB
-        db = FirebaseDatabase.getInstance().getReference();
 
-        helper = new FirebaseHelper(db);
-        DatabaseReference groupReferenses = db.child("Users").child(userUID).child("groupReferenses");
+        db = FirebaseDatabase.getInstance().getReference().child(_Users).child(_authUserId);
+        helper = new GroupsFirebaseHelper(db);
 
-        //ADAPTER
-        adapter = new GroupAdapter(
-                                GroupReference.class,
-                                R.layout.group_item,
-                                GroupsViewHolder.class,
-                                groupReferenses);
+        adapter = new GroupAdapter(ctx,helper.retreive());
+
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+//        //FIREBASE-ADAPTER
+//        adapter = new GroupAdapter(
+//                                GroupReference.class,
+//                                R.layout.group_item,
+//                                GroupsViewHolder.class,
+//                                db.child(_groupReferences));
 
 
         fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fabBaseActivity);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               addNewGroupTest();
+               addNewGroup();
             }
         });
     }
 
-    private void addNewGroupTest() {
-
-        Group group = addNewGroup();
-        String groupKey = helper.addGroup(group);
-
-        GroupReference groupRef = addGroupReference(groupKey);
-
-        if(helper.addGroupReference(groupRef) != null)
-            adapter.notifyDataSetChanged();
-
-
-    }
-
-    private Group addNewGroup() {
-        Random r = new Random();
-        String name = "Group_"+ r.nextInt(1000);
-        Group group = new Group(name);
-        group.addMember(addNewMember());
-        return group;
-    }
-
-    private Member addNewMember() {
-        String role = "coordinator";
-        return new Member(userUID,userName,role);
-    }
-
-    private GroupReference addGroupReference(String id) {
+    private void addNewGroup() {
         //GET DATA
-        Random r = new Random();
-        String name = "Group_"+ r.nextInt(1000);
-        String role = "coordinator";
-        return  new GroupReference(id,name,role);
+        String name = getGroupName();
+
+
+        String id = helper.addGroup(new Group(name));
+//        String role = "coordinator";
+//        //SET DATA
+//        GroupReference groupReference = new GroupReference(id,name,role);
+//
+//        //VALIDATE
+//        helper.addGroupReference(groupReference);
+        adapter.notifyDataSetChanged();
+    }
+
+    private String getGroupName() {
+        r = new Random();
+        return "Group_"+ r.nextInt(1000);
     }
 
 
@@ -118,6 +120,7 @@ public class GroupsFragment extends Fragment {
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(ctx));
         rv.setAdapter(adapter);
+
         return v;
     }
 

@@ -1,0 +1,52 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.selfapps.rav.alltogether.fragments.GroupDetailFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_Detail">
+
+        <TextView
+            android:text="Group Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tw_group_name"
+            android:textAlignment="center" />
+
+        <TextView
+            android:text="Coordinator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tw_coordinator"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_events"
+        >
+
+        <TextView
+            android:text="Events"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tw_events" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rv_group_events" />
+    </LinearLayout>
+
+</LinearLayout>
+
