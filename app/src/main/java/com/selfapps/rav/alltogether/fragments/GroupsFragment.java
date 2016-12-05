@@ -71,15 +71,6 @@ public class GroupsFragment extends Fragment {
         });
 
 
-
-//        //FIREBASE-ADAPTER
-//        adapter = new GroupAdapter(
-//                                GroupReference.class,
-//                                R.layout.group_item,
-//                                GroupsViewHolder.class,
-//                                db.child(_groupReferences));
-
-
         fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fabBaseActivity);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,17 +83,11 @@ public class GroupsFragment extends Fragment {
     private void addNewGroup() {
         //GET DATA
         String name = getGroupName();
-
-
         String id = helper.addGroup(new Group(name));
-//        String role = "coordinator";
-//        //SET DATA
-//        GroupReference groupReference = new GroupReference(id,name,role);
-//
-//        //VALIDATE
-//        helper.addGroupReference(groupReference);
+
         adapter.notifyDataSetChanged();
     }
+
 
     private String getGroupName() {
         r = new Random();
