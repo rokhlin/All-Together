@@ -1,4 +1,4 @@
-package com.selfapps.rav.alltogether.firebaseDao;
+package com.selfapps.rav.alltogether.Adapters;
 
 
 import android.content.Context;
@@ -7,19 +7,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import static com.selfapps.rav.alltogether.utilites.DbPath.*;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.selfapps.rav.alltogether.R;
-import com.selfapps.rav.alltogether.model.Group;
 import com.selfapps.rav.alltogether.model.GroupReference;
 import com.selfapps.rav.alltogether.utilites.ListenerGetter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupsViewHolder> {

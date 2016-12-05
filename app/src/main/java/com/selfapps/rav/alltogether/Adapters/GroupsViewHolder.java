@@ -1,4 +1,4 @@
-package com.selfapps.rav.alltogether.firebaseDao;
+package com.selfapps.rav.alltogether.Adapters;
 
 
 import android.content.Context;

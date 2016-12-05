@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.selfapps.rav.alltogether.model.Event;
 import com.selfapps.rav.alltogether.model.Group;
 import com.selfapps.rav.alltogether.model.GroupReference;
 import com.selfapps.rav.alltogether.model.Member;
@@ -19,18 +20,19 @@ import java.util.List;
 import static com.selfapps.rav.alltogether.utilites.DbPath._Groups;
 import static com.selfapps.rav.alltogether.utilites.DbPath._authEmail;
 import static com.selfapps.rav.alltogether.utilites.DbPath._authUserId;
+import static com.selfapps.rav.alltogether.utilites.DbPath._events;
 import static com.selfapps.rav.alltogether.utilites.DbPath._groupReferences;
 import static com.selfapps.rav.alltogether.utilites.DbPath._lastUpdate;
 
-public class FirebaseHelper {
+public class EventsFirebaseHelper {
 
-    private static final String TAG = "FirebaseHelper";
+    private final String TAG = this.getClass().getName();
     private final DatabaseReference db;
     private final DatabaseReference dbRoot = FirebaseDatabase.getInstance().getReference();
-    private List<GroupReference> groupReferences = new LinkedList<>();
+    private List<Event> events = new LinkedList<>();
 
 
-    public FirebaseHelper(DatabaseReference db) {
+    public EventsFirebaseHelper(DatabaseReference db) {
         this.db = db;
         db.child(_lastUpdate).setValue(System.currentTimeMillis());
     }
@@ -38,31 +40,30 @@ public class FirebaseHelper {
 
 
 
-    private String addGroupReference(GroupReference groupReference) {
-        DatabaseReference dbRef = db.child(_groupReferences);
-        return setValue(dbRef,groupReference);
-    }
+//    private String addGroupReference(GroupReference groupReference) {
+//        DatabaseReference dbRef = db.child(_groupReferences);
+//        return setValue(dbRef,groupReference);
+//    }
 
 
-    public String addGroup(Group group){
-        group.addMember(new Member(_authUserId,_authEmail,"coordinator"));
-        final DatabaseReference dbRef = dbRoot.child(_Groups);
-        final String key = setValue(dbRef,group);
-        addGroupReference(new GroupReference(key,group.getName(),"coordinator"));
+    public String addEvent(Event event, String groupId){
+
+        final DatabaseReference dbRef = dbRoot.child(_Groups).child(groupId).child(_events);
+        final String key = setValue(dbRef,event);
         return key;
     }
 
 
-    public List<GroupReference> retreive(){
+    public List<Event> retreive(){
         db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                fetchGroupReferences(dataSnapshot);
+                fetchReferences(dataSnapshot);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                fetchGroupReferences(dataSnapshot);
+                fetchReferences(dataSnapshot);
             }
 
             @Override
@@ -80,17 +81,18 @@ public class FirebaseHelper {
 
             }
         });
-        return groupReferences;
+        return events;
     }
 
 
-    private void fetchGroupReferences(DataSnapshot dataSnapshot)
+    private void fetchReferences(DataSnapshot dataSnapshot)
     {
-        groupReferences.clear();
+        events.clear();
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            groupReferences.add(ds.getValue(GroupReference.class));
+            Log.d(TAG,"DataSnapshot ds = "+ds.toString());
+            events.add(ds.getValue(Event.class));
         }
-        Log.d(TAG,"groupReferences.size() = "+ groupReferences.size());
+        Log.d(TAG,"events.size() = "+ events.size());
     }
 
 
