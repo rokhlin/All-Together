@@ -26,10 +26,10 @@ import com.selfapps.rav.alltogether.fragments.MembersFragment;
 import com.selfapps.rav.alltogether.model.GroupReference;
 
 public class GroupActivity extends AppCompatActivity {
-    public static String groupId;
+    private String groupId;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    public GroupReference groupReference;
+    private GroupReference groupReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +46,12 @@ public class GroupActivity extends AppCompatActivity {
         Intent intent = getIntent();
         groupId = intent.getStringExtra("groupId");
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action 2222", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
     }
 
+
+    public String getGroupId(){
+        return groupId;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

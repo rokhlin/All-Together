@@ -23,10 +23,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupsViewHolder> {
     private final DatabaseReference db = FirebaseDatabase.getInstance().getReference();
     private List<GroupReference> coordinatorGroups;
     DatabaseReference ref;//Users/0b7BDBFNWvXnt2h380VP8tZPotE2
-//    public GroupAdapter(Class<GroupReference> modelClass, int modelLayout, Class<GroupsViewHolder> viewHolderClass, DatabaseReference ref) {
-//        super(modelClass, modelLayout, viewHolderClass, ref);
-//        this.ref = ref;
-//    }
+
 
 
     public GroupAdapter(Context c, List<GroupReference> coordinatorGroups) {

@@ -25,6 +25,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventsViewHolder> {
     public EventAdapter(Context c, List<Event> events, String groupId) {
         this.c = c;
         this.events = events;
+        this.groupId = groupId;
         Log.d(TAG,"events.size() = "+events.size());
     }
 

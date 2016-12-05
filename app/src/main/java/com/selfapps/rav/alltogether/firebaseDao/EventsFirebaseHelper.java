@@ -58,11 +58,13 @@ public class EventsFirebaseHelper {
         db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG,"Event retreive dataSnapshot = "+dataSnapshot);
                 fetchReferences(dataSnapshot);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG,"Event retreive dataSnapshot = "+dataSnapshot);
                 fetchReferences(dataSnapshot);
             }
 
@@ -103,7 +105,7 @@ public class EventsFirebaseHelper {
             try
             {
                 String key = dbRef.push().getKey();
-                dbRef.child(key ).setValue(obj);
+                dbRef.child(key).setValue(obj);
                 return key;
             }catch (DatabaseException e)
             {

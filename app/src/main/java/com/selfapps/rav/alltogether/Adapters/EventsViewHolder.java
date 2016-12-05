@@ -19,7 +19,7 @@ import static com.selfapps.rav.alltogether.utilites.DbPath._Groups;
 import static com.selfapps.rav.alltogether.utilites.DbPath._events;
 
 public class EventsViewHolder extends RecyclerView.ViewHolder {
-    private static final String TAG = "EventsViewHolder";
+    private String TAG = this.getClass().getName();
     public TextView name;
     public TextView id;
     private View view;

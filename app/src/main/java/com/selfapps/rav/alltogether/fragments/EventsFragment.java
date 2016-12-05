@@ -7,17 +7,20 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.selfapps.rav.alltogether.Adapters.EventAdapter;
+import com.selfapps.rav.alltogether.GroupActivity;
 import com.selfapps.rav.alltogether.R;
 import com.selfapps.rav.alltogether.firebaseDao.EventsFirebaseHelper;
 import com.selfapps.rav.alltogether.firebaseDao.GroupsFirebaseHelper;
@@ -25,8 +28,10 @@ import com.selfapps.rav.alltogether.model.Event;
 
 import java.util.Date;
 
+import static com.selfapps.rav.alltogether.utilites.DbPath._Groups;
 import static com.selfapps.rav.alltogether.utilites.DbPath._Users;
 import static com.selfapps.rav.alltogether.utilites.DbPath._authUserId;
+import static com.selfapps.rav.alltogether.utilites.DbPath._events;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,7 +47,7 @@ public class EventsFragment extends Fragment {
     FloatingActionButton fab;
     private Context ctx;
 
-    private String groupId = "-KVavukfKGQEXqZGP3lj";// add value of selected group!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    private String groupId;
 
     public EventsFragment() {
         // Required empty public constructor
@@ -59,22 +64,23 @@ public class EventsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ctx = getActivity();
-
+        groupId = ((GroupActivity)ctx).getGroupId();
         //SETUP FB
 
         db = FirebaseDatabase.getInstance().getReference().child(_Users).child(_authUserId);
         helper = new EventsFirebaseHelper(db);
         adapter = new EventAdapter(getActivity(),helper.retreive(),groupId);
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
-
+//        db.child(_Groups).child(groupId).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                adapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
     @Override
@@ -97,6 +103,7 @@ public class EventsFragment extends Fragment {
                 event.setStartDate(System.currentTimeMillis()+10000);
                 event.setStatus(true);
                 helper.addEvent(event,groupId);
+                adapter.notifyDataSetChanged();
             }
         });
         return v;
