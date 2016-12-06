@@ -47,6 +47,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventsViewHolder> {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+    public void addEvent(Event e){
+        events.add(e);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return events.size();

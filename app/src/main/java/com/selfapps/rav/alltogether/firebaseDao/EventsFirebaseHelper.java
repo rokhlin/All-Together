@@ -41,9 +41,7 @@ public class EventsFirebaseHelper {
 
 
     public String addEvent(Event event){
-        final String key = setValue(db,event);
-        events.add(event);//inject
-        return key;
+        return setValue(db,event);
     }
 
 

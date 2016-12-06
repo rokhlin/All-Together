@@ -47,7 +47,6 @@ public class EventsFragment extends Fragment {
 
     public static EventsFragment newInstance(String param1, String param2) {
         EventsFragment fragment = new EventsFragment();
-
         return fragment;
     }
 
@@ -99,16 +98,26 @@ public class EventsFragment extends Fragment {
     }
 
     private String addEvent() {
+        Event event = createNewEvent();
+
+        String key = helper.addEvent(event);
+        event.setId(key);
+        adapter.addEvent(event);
+        return key;
+    }
+
+    /**
+     * TODO-Replace this method on the real data!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     * @return new Event
+     */
+    private Event createNewEvent() {
         Event event = new Event();
         event.setName("New Name");
         event.setMessage("New event message");
         event.setEndDate(System.currentTimeMillis());
         event.setStartDate(System.currentTimeMillis()+10000);
         event.setStatus(true);
-
-        String key = helper.addEvent(event);
-        adapter.notifyDataSetChanged();
-        return key;
+        return event;
     }
 
 }
