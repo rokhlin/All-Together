@@ -31,6 +31,7 @@ public class EventsViewHolder extends RecyclerView.ViewHolder {
         view = itemView;
         name = (TextView) itemView.findViewById(R.id.textView_EventName);
         id = (TextView) itemView.findViewById(R.id.textView_EventId);
+
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

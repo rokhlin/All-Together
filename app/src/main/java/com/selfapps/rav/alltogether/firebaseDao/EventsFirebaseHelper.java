@@ -14,8 +14,10 @@ import com.selfapps.rav.alltogether.model.Group;
 import com.selfapps.rav.alltogether.model.GroupReference;
 import com.selfapps.rav.alltogether.model.Member;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static com.selfapps.rav.alltogether.utilites.DbPath._Groups;
 import static com.selfapps.rav.alltogether.utilites.DbPath._authEmail;
@@ -27,45 +29,40 @@ import static com.selfapps.rav.alltogether.utilites.DbPath._lastUpdate;
 public class EventsFirebaseHelper {
 
     private final String TAG = this.getClass().getName();
-    private final DatabaseReference db;
-    private final DatabaseReference dbRoot = FirebaseDatabase.getInstance().getReference();
+
+    private final DatabaseReference db;//FirebaseDatabase.getInstance().getReference().child(_Groups).child(groupId)
     private List<Event> events = new LinkedList<>();
 
 
     public EventsFirebaseHelper(DatabaseReference db) {
         this.db = db;
-        db.child(_lastUpdate).setValue(System.currentTimeMillis());
+        db.child(_events).child(_lastUpdate).setValue(System.currentTimeMillis());
     }
 
 
-
-
-//    private String addGroupReference(GroupReference groupReference) {
-//        DatabaseReference dbRef = db.child(_groupReferences);
-//        return setValue(dbRef,groupReference);
-//    }
-
-
-    public String addEvent(Event event, String groupId){
-
-        final DatabaseReference dbRef = dbRoot.child(_Groups).child(groupId).child(_events);
-        final String key = setValue(dbRef,event);
+    public String addEvent(Event event){
+        final String key = setValue(db,event);
+        events.add(event);//inject
         return key;
     }
 
 
-    public List<Event> retreive(){
+    public List<Event> retrieve(){
         db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG,"Event retreive dataSnapshot = "+dataSnapshot);
-                fetchReferences(dataSnapshot);
+                Log.d(TAG,"String s = "+s);
+                Log.d(TAG,"Event retrieve dataSnapshot = "+dataSnapshot);
+                if(dataSnapshot.getKey().equals(_events))
+                        fetchReferences(dataSnapshot);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG,"Event retreive dataSnapshot = "+dataSnapshot);
-                fetchReferences(dataSnapshot);
+                Log.d(TAG,"String 2s = "+s);
+                Log.d(TAG,"Event retrieve dataSnapshot = "+dataSnapshot);
+                if(dataSnapshot.getKey().equals(_events))
+                    fetchReferences(dataSnapshot);
             }
 
             @Override
@@ -92,7 +89,12 @@ public class EventsFirebaseHelper {
         events.clear();
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
             Log.d(TAG,"DataSnapshot ds = "+ds.toString());
-            events.add(ds.getValue(Event.class));
+
+            if(ds.getKey().equals("lastUpdate")) continue;//pass lastUpdate value
+            Event e = ds.getValue(Event.class);
+            e.setId(ds.getKey());
+            Log.d(TAG,"event = "+ e);
+            events.add(e);
         }
         Log.d(TAG,"events.size() = "+ events.size());
     }

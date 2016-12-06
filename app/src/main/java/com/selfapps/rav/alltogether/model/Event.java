@@ -96,4 +96,37 @@ public class Event {
     public void setEventMembers(ArrayList<EventMember> eventMembers) {
         this.eventMembers = eventMembers;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Event event = (Event) o;
+
+        if (startDate != event.startDate) return false;
+        if (!id.equals(event.id)) return false;
+        return name.equals(event.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (int) (startDate ^ (startDate >>> 32));
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", status=" + status +
+                ", message='" + message + '\''+
+                '}';
+    }
 }

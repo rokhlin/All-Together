@@ -18,11 +18,9 @@ import java.util.List;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupsViewHolder> {
     private static final String TAG = "GroupAdapter";
-    private ListenerGetter getter = new ListenerGetter();
     private Context c;
-    private final DatabaseReference db = FirebaseDatabase.getInstance().getReference();
     private List<GroupReference> coordinatorGroups;
-    DatabaseReference ref;//Users/0b7BDBFNWvXnt2h380VP8tZPotE2
+
 
 
 
