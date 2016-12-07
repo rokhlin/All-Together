@@ -41,7 +41,7 @@ public class EventsFirebaseHelper {
 
 
     public String addEvent(Event event){
-        return setValue(db,event);
+        return setValue(db.child(_events),event);
     }
 
 

@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.selfapps.rav.alltogether.GroupActivity;
 import com.selfapps.rav.alltogether.R;
 import com.selfapps.rav.alltogether.firebaseDao.EventsFirebaseHelper;
 import com.selfapps.rav.alltogether.model.Event;
+import com.selfapps.rav.alltogether.model.Group;
 
 import static com.selfapps.rav.alltogether.utilites.DbPath._Groups;
 
@@ -39,6 +41,7 @@ public class EventsFragment extends Fragment {
 
 
     private String groupId;
+    private Group group;
 
     public EventsFragment() {
         // Required empty public constructor
@@ -53,7 +56,8 @@ public class EventsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        groupId = ((GroupActivity)getActivity()).getGroupId();
+        getGroup();
+
         //SETUP FB
 
         db = FirebaseDatabase.getInstance().getReference().child(_Groups).child(groupId);
@@ -74,19 +78,27 @@ public class EventsFragment extends Fragment {
         });
     }
 
+    private void getGroup() {
+        GroupActivity activity =(GroupActivity)getActivity();
+        groupId = activity.getGroupId();
+        group = activity.getGroup();
+        Log.d(TAG,"GROUP = " + group);
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_group_events, container, false);
 
-        TextView tv_coordinator =(TextView) v.findViewById(R.id.tw_coordinator);//add here information from group
-        TextView tv_groupName =(TextView) v.findViewById(R.id.tw_group_name);
+        setGroupAttributes(v);
 
         rv = (RecyclerView) v.findViewById(R.id.rv_group_events);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.setAdapter(adapter);
 
+        //TODO - Check the button working with members Fragment
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +107,14 @@ public class EventsFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    private void setGroupAttributes(View v) {
+        TextView tv_coordinator =(TextView) v.findViewById(R.id.tw_coordinator);
+        TextView tv_groupName =(TextView) v.findViewById(R.id.tw_group_name);
+
+//        tv_coordinator.setText(group.getMembers().get(0).getName() +" - "+group.getMembers().get(0).getRole());
+//        tv_groupName.setText(group.getName());
     }
 
     private String addEvent() {
@@ -119,5 +139,7 @@ public class EventsFragment extends Fragment {
         event.setStatus(true);
         return event;
     }
+
+    //TODO - Add action on the back pressed event
 
 }

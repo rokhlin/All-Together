@@ -26,7 +26,7 @@ import java.util.Random;
 
 public class GroupsFragment extends Fragment {
     private static final String TAG ="GroupsFragment" ;
-    DatabaseReference db; //0b7BDBFNWvXnt2h380VP8tZPotE2
+    DatabaseReference db; //FirebaseDatabase.getInstance().getReference().child(_Users).child(_authUserId);
     GroupsFirebaseHelper helper;
     RecyclerView rv;
     GroupAdapter adapter;
