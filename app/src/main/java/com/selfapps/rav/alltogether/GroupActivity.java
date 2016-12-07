@@ -16,12 +16,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.selfapps.rav.alltogether.Adapters.SectionsPagerAdapter;
+import com.selfapps.rav.alltogether.model.Event;
 import com.selfapps.rav.alltogether.model.Group;
 import com.selfapps.rav.alltogether.model.Member;
 
 import java.util.ArrayList;
 
 import static com.selfapps.rav.alltogether.utilites.DbPath._Groups;
+import static com.selfapps.rav.alltogether.utilites.DbPath._events;
 import static com.selfapps.rav.alltogether.utilites.DbPath._members;
 
 public class GroupActivity extends AppCompatActivity {
@@ -49,13 +51,13 @@ public class GroupActivity extends AppCompatActivity {
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG," dataSnapshot GROUP = " + dataSnapshot.child(groupId).child(_members));
+                Log.d(TAG," dataSnapshot GROUP = " + dataSnapshot.child(groupId).child(_events));
+
                 ArrayList<Member> members = fillMembers(dataSnapshot.child(groupId).child(_members));
                 Log.d(TAG,"members = " + members.size());
-                //group = dataSnapshot.getValue(Group.class);
-                //Log.d(TAG,"group_restore = " + group);
-//                ArrayList<Member> members = fillMembers(dataSnapshot);
-//                group.setId(dataSnapshot.getKey());
+
+                ArrayList<Event> events = fillEvents(dataSnapshot.child(groupId).child(_events));
+                Log.d(TAG,"events = " + events.size());
             }
 
             @Override
@@ -63,6 +65,18 @@ public class GroupActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private ArrayList<Event> fillEvents(DataSnapshot dataSnapshot) {
+        ArrayList<Event> events = new ArrayList<>();
+        for(DataSnapshot ds : dataSnapshot.getChildren()){
+            if(ds.getKey().equals("lastUpdate"))continue;//skip non Event value
+
+            Event e = ds.getValue(Event.class);
+            e.setId(ds.getKey());
+            events.add(e);
+        }
+        return events;
     }
 
     private ArrayList<Member> fillMembers(DataSnapshot dataSnapshot) {
