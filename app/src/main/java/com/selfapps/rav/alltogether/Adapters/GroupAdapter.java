@@ -42,6 +42,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupsViewHolder> {
     public void onBindViewHolder(GroupsViewHolder holder, int position) {
         holder.name.setText(coordinatorGroups.get(position).getName());
         holder.id.setText(coordinatorGroups.get(position).getId());
+        holder.role.setText(coordinatorGroups.get(position).getRole());
     }
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
@@ -55,6 +56,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupsViewHolder> {
     protected void populateViewHolder(GroupsViewHolder holder, GroupReference group, int position) {
             holder.name.setText(group.getName());
             holder.id.setText(group.getId());
+            holder.role.setText(group.getId());
     }
 
 

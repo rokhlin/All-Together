@@ -30,17 +30,22 @@ public class GroupsViewHolder extends RecyclerView.ViewHolder  {
     private static final String TAG = "GroupsViewHolder";
     public TextView name;
     public TextView id;
-
+    public TextView role;
 
     public GroupsViewHolder(View itemView) {
         super(itemView);
         name = (TextView) itemView.findViewById(R.id.textView_GroupName);
         id = (TextView) itemView.findViewById(R.id.textView_GroupId);
+        role = (TextView) itemView.findViewById(R.id.textView_GroupRole);
+
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String groupId = id.getText().toString();
-                loadFragment(groupId,v.getContext());
+                final String groupName = name.getText().toString();
+                final String groupRole = role.getText().toString();
+
+                loadFragment(groupId, groupName, groupRole, v.getContext());
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference();
                 db.child(_Groups).child(groupId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -58,18 +63,13 @@ public class GroupsViewHolder extends RecyclerView.ViewHolder  {
         });
     }
 
-    private void loadFragment(String groupId, Context context) {
+    private void loadFragment(String groupId, String groupName,String groupRole, Context context) {
         Fragment fragment = ((BaseActivity)context).groupDetailFragment;
-//        Bundle b = new Bundle();
-//        b.putString("groupId",groupId);
-//        fragment.setArguments(b);
-//        ListenerGetter.setId(groupId);
-//        FragmentTransaction fTrans = ((BaseActivity)context).getSupportFragmentManager().beginTransaction();
-//        fTrans.replace(R.id.frameLayoutBaseActivity, fragment);
-//        fTrans.commit();
 
         Intent intent = new Intent(((BaseActivity)context), GroupActivity.class);
         intent.putExtra("groupId", groupId);
+        intent.putExtra("groupName", groupName);
+        intent.putExtra("groupRole", groupRole);
         ((BaseActivity)context).startActivity(intent);
     }
 }

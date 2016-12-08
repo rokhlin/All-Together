@@ -40,8 +40,11 @@ public class EventsFragment extends Fragment {
     FloatingActionButton fab;
 
 
+
     private String groupId;
-    private Group group;
+    private String groupName;
+    private String groupRole;
+    private Group group;// TODO need to find usage
 
     public EventsFragment() {
         // Required empty public constructor
@@ -81,9 +84,8 @@ public class EventsFragment extends Fragment {
     private void getGroup() {
         GroupActivity activity =(GroupActivity)getActivity();
         groupId = activity.getGroupId();
-        group = activity.getGroup();
-        Log.d(TAG,"GROUP = " + group);
-
+        groupName = activity.getGroupName();
+        groupRole = activity.getGroupRole();
     }
 
     @Override
@@ -113,8 +115,9 @@ public class EventsFragment extends Fragment {
         TextView tv_coordinator =(TextView) v.findViewById(R.id.tw_coordinator);
         TextView tv_groupName =(TextView) v.findViewById(R.id.tw_group_name);
 
-//        tv_coordinator.setText(group.getMembers().get(0).getName() +" - "+group.getMembers().get(0).getRole());
-//        tv_groupName.setText(group.getName());
+        Log.d(TAG,"MARKER--------------------------------------------E");
+        tv_coordinator.setText(groupRole);
+        tv_groupName.setText(groupName);
     }
 
     private String addEvent() {

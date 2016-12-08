@@ -24,11 +24,14 @@ import java.util.ArrayList;
 
 import static com.selfapps.rav.alltogether.utilites.DbPath._Groups;
 import static com.selfapps.rav.alltogether.utilites.DbPath._events;
+import static com.selfapps.rav.alltogether.utilites.DbPath._lastUpdate;
 import static com.selfapps.rav.alltogether.utilites.DbPath._members;
 
 public class GroupActivity extends AppCompatActivity {
     private String TAG = this.getClass().getName();
     private String groupId;
+    private String groupName;
+    private String groupRole;
     private Group group;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -46,18 +49,29 @@ public class GroupActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         Intent intent = getIntent();
+
         groupId = intent.getStringExtra("groupId");
+        groupRole = intent.getStringExtra("groupRole");
+        groupName = intent.getStringExtra("groupName");
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child(_Groups);//.child(groupId)
+
+
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG," dataSnapshot GROUP = " + dataSnapshot.child(groupId).child(_events));
+                Group group = new Group();
+                group.setId(groupId);
+                group.setName(dataSnapshot.child(groupId).child("name").getValue(String.class));
 
                 ArrayList<Member> members = fillMembers(dataSnapshot.child(groupId).child(_members));
+                group.setMembers(members);
                 Log.d(TAG,"members = " + members.size());
 
                 ArrayList<Event> events = fillEvents(dataSnapshot.child(groupId).child(_events));
                 Log.d(TAG,"events = " + events.size());
+                group.setEvents(events);
+                setGroup(group);
             }
 
             @Override
@@ -67,9 +81,15 @@ public class GroupActivity extends AppCompatActivity {
         });
     }
 
+    private void setGroup(Group group) {
+        Log.d(TAG,"MARKER--------------------------------------------G");
+        this.group = group;
+    }
+
     private ArrayList<Event> fillEvents(DataSnapshot dataSnapshot) {
         ArrayList<Event> events = new ArrayList<>();
         for(DataSnapshot ds : dataSnapshot.getChildren()){
+
             if(ds.getKey().equals("lastUpdate"))continue;//skip non Event value
 
             Event e = ds.getValue(Event.class);
@@ -94,7 +114,16 @@ public class GroupActivity extends AppCompatActivity {
         return groupId;
     }
 
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public String getGroupRole() {
+        return groupRole;
+    }
+
     public Group getGroup() {
+        Log.d(TAG,"GROUP = " + group);
         return group;
     }
 
