@@ -21,6 +21,7 @@ import static com.selfapps.rav.alltogether.utilites.DbPath._authEmail;
 import static com.selfapps.rav.alltogether.utilites.DbPath._authUserId;
 import static com.selfapps.rav.alltogether.utilites.DbPath._groupReferences;
 import static com.selfapps.rav.alltogether.utilites.DbPath._lastUpdate;
+import static com.selfapps.rav.alltogether.utilites.DbPath._members;
 
 public class GroupsFirebaseHelper {
 
@@ -46,12 +47,17 @@ public class GroupsFirebaseHelper {
 
 
     public String addGroup(Group group){
-        group.addMember(new Member(_authUserId,_authEmail,"coordinator"));
+        //group.addMember(new Member(_authUserId,_authEmail,"coordinator"));
         final DatabaseReference dbRef = dbRoot.child(_Groups);
         final String key = setValue(dbRef,group);
         addGroupReference(new GroupReference(key,group.getName(),"coordinator"));
         return key;
     }
+
+    public void addMember(String groupId, Member member){
+        dbRoot.child(_Groups).child(groupId).child(_members).child(member.getUserId()).setValue(member);
+    }
+
 
 
     public List<GroupReference> retreive(){

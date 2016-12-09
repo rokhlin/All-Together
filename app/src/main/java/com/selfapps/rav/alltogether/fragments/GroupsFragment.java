@@ -19,6 +19,7 @@ import com.selfapps.rav.alltogether.R;
 import com.selfapps.rav.alltogether.firebaseDao.GroupsFirebaseHelper;
 import com.selfapps.rav.alltogether.Adapters.GroupAdapter;
 import com.selfapps.rav.alltogether.model.Group;
+import com.selfapps.rav.alltogether.model.Member;
 
 import static com.selfapps.rav.alltogether.utilites.DbPath.*;
 
@@ -84,7 +85,7 @@ public class GroupsFragment extends Fragment {
         //GET DATA
         String name = getGroupName();
         String id = helper.addGroup(new Group(name));
-
+        helper.addMember(id,new Member(_authUserId,_authEmail,_Role_coordinator));
         adapter.notifyDataSetChanged();
     }
 
