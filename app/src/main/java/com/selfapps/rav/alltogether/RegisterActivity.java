@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = "RegisterActivity";
+    private static final boolean DEBUG = true;
     TextView  tvSignIn;
     EditText etEmail, etPass;
     Button btnRegister;
@@ -41,10 +42,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (user != null) {
                     loadBaseActivity();
 
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    if(DEBUG) Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    if(DEBUG) Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
                 // ...
             }
@@ -136,7 +137,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+                            if(DEBUG) Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
                             if (!task.isSuccessful()) {
                                 Snackbar.make(layout, "Authentication failed. Check Email/Password and try Again.", Snackbar.LENGTH_SHORT)

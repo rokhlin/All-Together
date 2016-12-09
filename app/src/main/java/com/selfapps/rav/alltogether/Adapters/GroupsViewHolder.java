@@ -28,6 +28,7 @@ import static com.selfapps.rav.alltogether.utilites.DbPath._Groups;
 
 public class GroupsViewHolder extends RecyclerView.ViewHolder  {
     private static final String TAG = "GroupsViewHolder";
+    private static final boolean DEBUG = true ;
     public TextView name;
     public TextView id;
     public TextView role;
@@ -50,7 +51,7 @@ public class GroupsViewHolder extends RecyclerView.ViewHolder  {
                 db.child(_Groups).child(groupId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d(TAG,"key - dataSnapshot = "+ groupId +" -- "+dataSnapshot.toString());
+                        if(DEBUG) Log.d(TAG,"key - dataSnapshot = "+ groupId +" -- "+dataSnapshot.toString());
 
                     }
 

@@ -17,6 +17,7 @@ import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<EventsViewHolder> {
     private static final String TAG = "EventAdapter";
+    private static final boolean DEBUG = true;
     private Context c;
     private List<Event> events;
     private final DatabaseReference db = FirebaseDatabase.getInstance().getReference();
@@ -26,7 +27,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventsViewHolder> {
         this.c = c;
         this.events = events;
         this.groupId = groupId;
-        Log.d(TAG,"events.size() = "+events.size());
+        if(DEBUG) Log.d(TAG,"events.size() = "+events.size());
     }
 
     @Override

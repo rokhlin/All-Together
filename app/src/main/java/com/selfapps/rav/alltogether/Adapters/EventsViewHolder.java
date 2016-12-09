@@ -20,6 +20,7 @@ import static com.selfapps.rav.alltogether.utilites.DbPath._events;
 
 public class EventsViewHolder extends RecyclerView.ViewHolder {
     private String TAG = this.getClass().getName();
+    private static final boolean DEBUG =true;
     public TextView name;
     public TextView id;
     private View view;
@@ -41,7 +42,7 @@ public class EventsViewHolder extends RecyclerView.ViewHolder {
                 db.child(_Groups).child(groupId).child(_events).child(eventId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d(TAG,"key - dataSnapshot = "+ eventId +" -- "+dataSnapshot.toString());
+                        if(DEBUG) Log.d(TAG,"key - dataSnapshot = "+ eventId +" -- "+dataSnapshot.toString());
 
                     }
 

@@ -28,6 +28,7 @@ import static com.selfapps.rav.alltogether.utilites.DbPath._lastUpdate;
 import static com.selfapps.rav.alltogether.utilites.DbPath._members;
 
 public class GroupActivity extends AppCompatActivity {
+    private static final boolean DEBUG = true;
     private String TAG = this.getClass().getName();
     private String groupId;
     private String groupName;
@@ -82,7 +83,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void setGroup(Group group) {
-        Log.d(TAG,"MARKER--------------------------------------------G");
+        if(DEBUG) Log.d(TAG,"MARKER--------------------------------------------G");
         this.group = group;
     }
 
@@ -123,7 +124,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     public Group getGroup() {
-        Log.d(TAG,"GROUP = " + group);
+        if(DEBUG) Log.d(TAG,"GROUP = " + group);
         return group;
     }
 

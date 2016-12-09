@@ -33,6 +33,7 @@ import static com.selfapps.rav.alltogether.utilites.DbPath._Groups;
  */
 public class EventsFragment extends Fragment {
     private static final String TAG ="EventsFragment" ;
+    private static final boolean DEBUG = true;
     DatabaseReference db;//FirebaseDatabase.getInstance().getReference().child(_Groups).child(groupId)
     EventsFirebaseHelper helper;
     RecyclerView rv;
@@ -115,7 +116,7 @@ public class EventsFragment extends Fragment {
         TextView tv_coordinator =(TextView) v.findViewById(R.id.tw_coordinator);
         TextView tv_groupName =(TextView) v.findViewById(R.id.tw_group_name);
 
-        Log.d(TAG,"MARKER--------------------------------------------E");
+        if(DEBUG) Log.d(TAG,"MARKER--------------------------------------------E");
         tv_coordinator.setText(groupRole);
         tv_groupName.setText(groupName);
     }

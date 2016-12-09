@@ -28,6 +28,7 @@ import static com.selfapps.rav.alltogether.utilites.DbPath._lastUpdate;
 
 public class EventsFirebaseHelper {
 
+    private static final boolean DEBUG = true;
     private final String TAG = this.getClass().getName();
 
     private final DatabaseReference db;//FirebaseDatabase.getInstance().getReference().child(_Groups).child(groupId)
@@ -49,16 +50,16 @@ public class EventsFirebaseHelper {
         db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG,"String s = "+s);
-                Log.d(TAG,"Event retrieve dataSnapshot = "+dataSnapshot);
+                if(DEBUG) Log.d(TAG,"String s = "+s);
+                if(DEBUG) Log.d(TAG,"Event retrieve dataSnapshot = "+dataSnapshot);
                 if(dataSnapshot.getKey().equals(_events))
                         fetchReferences(dataSnapshot);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG,"String 2s = "+s);
-                Log.d(TAG,"Event retrieve dataSnapshot = "+dataSnapshot);
+                if(DEBUG) Log.d(TAG,"String 2s = "+s);
+                if(DEBUG) Log.d(TAG,"Event retrieve dataSnapshot = "+dataSnapshot);
                 if(dataSnapshot.getKey().equals(_events))
                     fetchReferences(dataSnapshot);
             }
@@ -86,12 +87,12 @@ public class EventsFirebaseHelper {
     {
         events.clear();
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            Log.d(TAG,"DataSnapshot ds = "+ds.toString());
+            if(DEBUG) Log.d(TAG,"DataSnapshot ds = "+ds.toString());
 
             if(ds.getKey().equals("lastUpdate")) continue;//pass lastUpdate value
             Event e = ds.getValue(Event.class);
             e.setId(ds.getKey());
-            Log.d(TAG,"event = "+ e);
+            if(DEBUG) Log.d(TAG,"event = "+ e);
             events.add(e);
         }
         Log.d(TAG,"events.size() = "+ events.size());

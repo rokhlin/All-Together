@@ -25,6 +25,7 @@ import static com.selfapps.rav.alltogether.utilites.DbPath._lastUpdate;
 public class GroupsFirebaseHelper {
 
     private static final String TAG = "GroupsFirebaseHelper";
+    private static final boolean DEBUG = true;
     private final DatabaseReference db;
     private final DatabaseReference dbRoot = FirebaseDatabase.getInstance().getReference();
     private List<GroupReference> groupReferences = new LinkedList<>();
@@ -90,7 +91,7 @@ public class GroupsFirebaseHelper {
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
             groupReferences.add(ds.getValue(GroupReference.class));
         }
-        Log.d(TAG,"groupReferences.size() = "+ groupReferences.size());
+        if(DEBUG) Log.d(TAG,"groupReferences.size() = "+ groupReferences.size());
     }
 
 

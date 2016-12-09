@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
+    private static final boolean DEBUG = true;
     TextView tvSignIn;
     EditText etEmail, etPass;
     Button btnLogin;
@@ -44,10 +45,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (user != null) {
                     loadBaseActivity();
 
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    if(DEBUG) Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    if(DEBUG) Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
 
             }

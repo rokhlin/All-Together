@@ -18,6 +18,7 @@ import java.util.List;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupsViewHolder> {
     private static final String TAG = "GroupAdapter";
+    private static final boolean DEBUG = true;
     private Context c;
     private List<GroupReference> coordinatorGroups;
 
@@ -27,7 +28,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupsViewHolder> {
     public GroupAdapter(Context c, List<GroupReference> coordinatorGroups) {
         this.c = c;
         this.coordinatorGroups = coordinatorGroups;
-        Log.d(TAG,"coordinatorGroups.size() = "+coordinatorGroups.size());
+        if(DEBUG) Log.d(TAG,"coordinatorGroups.size() = "+coordinatorGroups.size());
     }
 
 
