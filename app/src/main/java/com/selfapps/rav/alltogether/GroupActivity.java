@@ -91,7 +91,7 @@ public class GroupActivity extends AppCompatActivity {
         ArrayList<Event> events = new ArrayList<>();
         for(DataSnapshot ds : dataSnapshot.getChildren()){
 
-            if(ds.getKey().equals("lastUpdate"))continue;//skip non Event value
+            if(ds.getKey().equals(_lastUpdate))continue;//skip non Event value
 
             Event e = ds.getValue(Event.class);
             e.setId(ds.getKey());
